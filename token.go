@@ -24,6 +24,15 @@ func NewTokenStore(cfg *Config) (ts oauth2.TokenStore, err error) {
 	return
 }
 
+func NewTokenStoreWithCli(cli *redis.Client) (ts oauth2.TokenStore, err error) {
+	if verr := cli.Ping().Err(); verr != nil {
+		err = verr
+		return
+	}
+	ts = &TokenStore{cli: cli}
+	return
+}
+
 // TokenStore redis token store
 type TokenStore struct {
 	cli *redis.Client
